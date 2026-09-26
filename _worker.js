@@ -2430,13 +2430,13 @@ async function forwardataTCP(host, portNum, rawData, ws, respHeader, remoteConnW
 	}
 	remoteConnWrapper.retryConnect = async () => connecttoPry(!已通过代理发送首包);
 
-	if (ctx代理类型 && (ctx代理全局 || SOCKS5白名单.some(p => new RegExp(`^${p.replace(/\*/g, '.*')}$`, 'i').test(host)))) {
-		log(`[TCP转发] 启用 SOCKS5/HTTP/HTTPS/TURN/SSTP 全局代理`);
+	if (/google|googleapis/i.test(host) || (ctx代理类型 && (ctx代理全局 || SOCKS5白名单.some(p => new RegExp(`^${p.replace(/\*/g, '.*')}$`, 'i').test(host))))) {
+		log(`[TCP转发] 命中 Google 或代理规则，走 PROXYIP 转发通道: ${host}`);
 		try {
 			await connecttoPry();
 			if (仅建立连接) return remoteConnWrapper.socket;
 		} catch (err) {
-			log(`[TCP转发] SOCKS5/HTTP/HTTPS/TURN/SSTP 代理连接失败: ${err.message}`);
+			log(`[TCP转发] 代理连接失败: ${err.message}`);
 			throw err;
 		}
 	} else {
